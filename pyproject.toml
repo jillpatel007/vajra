@@ -1,0 +1,50 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "vajra"
+version = "0.1.0"
+description = "Open-source multi-cloud attack path intelligence"
+readme = "README.md"
+license = { text = "Apache-2.0" }
+requires-python = ">=3.11"
+keywords = ["cloud", "security", "attack-paths", "devsecops"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Topic :: Security",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "License :: OSI Approved :: Apache Software License",
+]
+
+[project.scripts]
+vajra = "vajra.cli:app"
+
+[tool.mypy]
+strict = true
+python_version = "3.13"
+disallow_untyped_defs = true
+disallow_any_generics = true
+warn_return_any = true
+warn_unused_ignores = true
+
+[tool.ruff]
+target-version = "py313"
+line-length = 88
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "S", "B", "I", "UP"]
+ignore = ["S101"]
+
+[tool.bandit]
+skips = ["B101"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+
+[tool.coverage.run]
+source = ["vajra"]
+omit = ["tests/*"]
