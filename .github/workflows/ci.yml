@@ -21,6 +21,9 @@ jobs:
       - name: Install dependencies
         run: uv sync --dev
 
+      - name: Install dev tools explicitly
+        run: uv pip install ruff mypy bandit pytest pytest-cov pytest-asyncio
+
       - name: Lint (ruff)
         run: uv run ruff check vajra/
 
