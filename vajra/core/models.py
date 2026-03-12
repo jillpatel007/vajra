@@ -103,7 +103,7 @@ class CloudAsset(BaseModel):
         "huawei",
     ]
     region: str
-    metadata: dict = {}  # type: ignore[var-annotated]
+    metadata: dict[str, object] = {}
     is_entry_point: bool = False
     is_crown_jewel: bool = False
     is_shadow_it: bool = False
