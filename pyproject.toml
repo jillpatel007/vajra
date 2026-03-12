@@ -48,3 +48,8 @@ testpaths = ["tests"]
 [tool.coverage.run]
 source = ["vajra"]
 omit = ["tests/*"]
+
+[dependency-groups]
+dev = [
+    "detect-secrets>=1.5.0",
+]
