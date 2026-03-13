@@ -18,6 +18,9 @@ classifiers = [
     "Programming Language :: Python :: 3.13",
     "License :: OSI Approved :: Apache Software License",
 ]
+dependencies = [
+    "rustworkx>=0.17.1",
+]
 
 [project.scripts]
 vajra = "vajra.cli:app"
