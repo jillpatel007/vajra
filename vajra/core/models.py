@@ -77,6 +77,7 @@ class AssetType(Enum):
     DATASET = "dataset"
     # Generic
     CICD_PIPELINE = "cicd_pipeline"
+    VIRTUAL = "virtual"
 
 
 # Block 3 - CloudAsset
@@ -139,6 +140,9 @@ class GraphEdge:
     conditions: tuple[str, ...] = ()
     iam_validity: EdgeValidity = EdgeValidity.ASSUMED_VALID
     network_validity: NetworkValidity = NetworkValidity.UNKNOWN
+    epss_score: float | None = None
+    cisa_kev: bool = False
+    falco_active: bool = False
 
     @property
     def is_exploitable(self) -> bool:
@@ -152,6 +156,23 @@ class GraphEdge:
             self.iam_validity == EdgeValidity.VALID
             and self.network_validity == NetworkValidity.REACHABLE
         )
+
+    @property
+    def effective_risk_weight(self) -> float:
+        """Risk weight amplified by real-world exploit data.
+
+        CISA KEV = confirmed exploited in wild = +50%
+        High EPSS = likely to be exploited = +30%
+        Falco active = being exploited RIGHT NOW = 100%
+        """
+        weight = self.risk_weight
+        if self.cisa_kev:
+            weight = min(1.0, weight * 1.5)
+        if self.epss_score and self.epss_score > 0.7:
+            weight = min(1.0, weight * 1.3)
+        if self.falco_active:
+            weight = 1.0
+        return weight
 
 
 # Block 5 - Module interface

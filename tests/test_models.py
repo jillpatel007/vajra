@@ -22,7 +22,7 @@ def test_cloud_asset_creates_correctly() -> None:
         provider="aws",
         region="us-east-1",
     )
-    assert asset.name == "DataProcessingRole"
+    assert asset.name == "DataPro   cessingRole"
     assert asset.provider == "aws"
     assert asset.is_entry_point is False
     assert asset.is_crown_jewel is False
