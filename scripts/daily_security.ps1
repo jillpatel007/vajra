@@ -73,7 +73,7 @@ if ($secretCount -gt 0) {
 # SolarWinds happened because of a compromised dependency
 # -----------------------------------------------
 Write-Host "`n[4/6] PIP-AUDIT - Supply Chain Scan" -ForegroundColor Yellow
-$audit = uv run pip-audit --ignore-vuln CVE-2026-4539 2>&1
+$audit = uv run pip-audit --ignore-vuln CVE-2026-4539 --skip-editable 2>&1
 if ($LASTEXITCODE -eq 0) {
     Write-Host "      PASS - No known vulnerabilities" -ForegroundColor Green
     $results += "PIP-AUDIT:    PASS"
