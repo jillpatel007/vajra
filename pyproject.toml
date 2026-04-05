@@ -19,6 +19,12 @@ classifiers = [
     "License :: OSI Approved :: Apache Software License",
 ]
 dependencies = [
+    "cryptography==46.0.6",
+    "duckdb>=1.5.1",
+    "pandas>=3.0.2",
+    "pydantic>=2.12",
+    "pydantic-settings>=2.7",
+    "requests==2.33.0",
     "rustworkx>=0.17.1",
 ]
 
@@ -55,6 +61,13 @@ omit = ["tests/*"]
 
 [dependency-groups]
 dev = [
+    "bandit>=1.7",
     "detect-secrets>=1.5.0",
+    "mypy>=1.10",
+    "pip-audit>=2.10.0",
     "pydantic[mypy]>=2.12.5",
+    "pytest>=8.0",
+    "pytest-asyncio>=0.23",
+    "pytest-cov>=5.0",
+    "ruff>=0.8.0",
 ]

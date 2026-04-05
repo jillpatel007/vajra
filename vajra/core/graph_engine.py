@@ -169,7 +169,7 @@ class VajraGraph:
                 )
         cut_result = rx.stoer_wagner_min_cut(
             undirected,
-            weight_fn=lambda e: (e if isinstance(e, float) else 1.0),
+            weight_fn=lambda e: e if isinstance(e, float) else 1.0,
         )
         self._remove_virtual_nodes(virtual)
         if cut_result is None:
@@ -228,6 +228,8 @@ class VajraGraph:
                     region=asset.region,
                     is_crown_jewel=False,
                 )
-        result = self.find_minimum_cut()
-        self._idx_to_asset = original
+        try:
+            result = self.find_minimum_cut()
+        finally:
+            self._idx_to_asset = original
         return result

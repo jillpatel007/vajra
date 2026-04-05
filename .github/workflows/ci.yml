@@ -33,5 +33,8 @@ jobs:
       - name: Security scan (bandit)
         run: uv run bandit -r vajra/ -ll -q
 
+      - name: Supply chain audit (pip-audit)
+        run: uv run pip-audit --ignore-vuln CVE-2026-4539
+
       - name: Tests
         run: uv run pytest tests/ -v --tb=short
