@@ -188,7 +188,7 @@ class CloudQueryAdapter:
             id=asset_id,
             name=name,
             asset_type=asset_type,
-            provider=provider,  # type: ignore[arg-type]
+            provider=provider,
             region=region,
         )
 

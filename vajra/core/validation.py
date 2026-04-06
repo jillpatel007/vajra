@@ -154,7 +154,7 @@ class InputSanitiser:
                 result[key] = self.sanitise(value)
             elif isinstance(value, dict):
                 result[key] = self.sanitise_dict(
-                    value,  # type: ignore[arg-type]
+                    value,
                     _depth=_depth + 1,
                 )
             else:

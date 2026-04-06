@@ -34,11 +34,11 @@ class SignedReport:
         signed_at  – ISO-8601 UTC timestamp embedded in the payload before signing
     """
 
-    payload: dict
+    payload: dict[str, object]
     signature: str
     signed_at: str
 
-    def to_dict(self) -> dict:
+    def to_dict(self) -> dict[str, object]:
         return {
             "payload": self.payload,
             "signature": self.signature,
@@ -46,7 +46,7 @@ class SignedReport:
         }
 
 
-def _canonical_bytes(payload: dict) -> bytes:
+def _canonical_bytes(payload: dict[str, object]) -> bytes:
     """Serialize payload to canonical bytes for signing.
 
     Why sort_keys=True and separators=(',', ':')?
@@ -57,7 +57,7 @@ def _canonical_bytes(payload: dict) -> bytes:
     return json.dumps(payload, sort_keys=True, separators=(",", ":")).encode()
 
 
-def sign_report(payload: dict, secret_key: str) -> SignedReport:
+def sign_report(payload: dict[str, object], secret_key: str) -> SignedReport:
     """Sign a report payload with HMAC-SHA256.
 
     Embeds a UTC timestamp into the payload before signing so that
