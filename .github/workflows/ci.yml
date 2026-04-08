@@ -26,7 +26,7 @@ jobs:
         run: uv sync --dev
 
       - name: Install dev tools explicitly
-        run: uv pip install ruff mypy bandit pytest pytest-cov pytest-asyncio
+        run: uv pip install ruff mypy bandit pytest pytest-cov pytest-asyncio hypothesis
 
       - name: Lint (ruff)
         run: uv run ruff check vajra/
