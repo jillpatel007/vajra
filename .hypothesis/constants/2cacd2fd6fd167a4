@@ -1,0 +1,4 @@
+# file: D:\vajra\vajra\mitre\overlay.py
+# hypothesis_version: 6.151.9
+
+['AML', 'AML.T0020', 'AML.T0043', 'AML.TA0001', 'AML.TA0002', 'T', 'T0000', 'T1078.004', 'T1195.002', 'T1199', 'T1530', 'T1550.001', 'T1552.005', 'TA0000', 'TA0001', 'TA0004', 'TA0006', 'TA0008', 'TA0009', 'Trusted Relationship', 'Unknown Technique', 'atlas_techniques', 'attack_techniques', 'mitre_attack', 'name', 'relation', 'tactic', 'technique', 'techniques_mapped']

@@ -31,7 +31,7 @@ dependencies = [
 ]
 
 [project.scripts]
-vajra = "vajra.cli:app"
+vajra = "vajra.cli:main"
 
 [tool.mypy]
 plugins = ["pydantic.mypy"]

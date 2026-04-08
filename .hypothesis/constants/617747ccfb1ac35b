@@ -1,0 +1,4 @@
+# file: D:\vajra\vajra\alerts\webhooks.py
+# hypothesis_version: 6.151.9
+
+['attack_paths', 'critical', 'minimum_cut_edges', 'slack alert sent: %s']

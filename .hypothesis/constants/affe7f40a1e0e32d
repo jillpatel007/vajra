@@ -1,0 +1,4 @@
+# file: D:\vajra\vajra\rules\sast.py
+# hypothesis_version: 6.151.9
+
+['#', '...', '.env', '.json', '.py', '.yaml', '.yml', 'AKIA[0-9A-Z]{16}', 'aws_access_key', 'aws_secret_key', 'generic_api_key', 'generic_secret', 'github_token', 'ignore', 'noqa', 'pragma: allowlist', 'private_key']

@@ -1,0 +1,4 @@
+# file: D:\vajra\vajra\reliability\slos.py
+# hypothesis_version: 6.151.9
+
+[0.0, 0.95, 0.995, 1.0, 4.0, 30.0, 'finding_freshness', 'hours', 'ratio', 'scan_latency_p95', 'scan_success_rate', 'seconds']

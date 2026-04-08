@@ -1,0 +1,4 @@
+# file: D:\vajra\vajra\discovery\common\github_oidc.py
+# hypothesis_version: 6.151.9
+
+[0.9, ':', 'Condition', 'Federated', 'Principal', 'StringEquals', 'StringLike', 'accounts.google.com', 'aws', 'edges', 'global', 'oidc_provider', 'repo', 'role_id', 'sts.amazonaws.com', 'trust_policy', 'unknown', 'workflows']

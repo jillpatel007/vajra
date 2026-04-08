@@ -1,0 +1,4 @@
+# file: D:\vajra\vajra\ai\context_architect.py
+# hypothesis_version: 6.151.9
+
+[180000, 'critical', 'critical_first', 'high', 'info', 'low', 'medium', 'relevant_first', 'severity', 'temporal_first', 'timestamp']

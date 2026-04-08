@@ -1,0 +1,4 @@
+# file: D:\vajra\vajra\rules\loader.py
+# hypothesis_version: 6.151.9
+
+['condition', 'description', 'id', 'medium', 'mitre_atlas', 'mitre_attack', 'name', 'remediation', 'rules', 'severity']

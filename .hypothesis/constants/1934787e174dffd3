@@ -1,0 +1,4 @@
+# file: D:\vajra\vajra\discovery\aws\discoverer.py
+# hypothesis_version: 6.151.9
+
+[0.5, 0.8, 0.9, 'ALLOW', 'action', 'aws', 'conditions', 'effect', 'principal', 'rds-db:connect', 'rds:*', 'resource', 's3:*', 's3:GetObject', 's3:PutObject', 'sts:AssumeRole']

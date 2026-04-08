@@ -1,0 +1,4 @@
+# file: D:\vajra\vajra\ai\agent.py
+# hypothesis_version: 6.151.9
+
+[4880000, 'affected_assets', 'asset_id required', 'asset_ids', 'attack', 'attack_paths', 'complete', 'cost', 'cut', 'edges', 'edges_to_cut', 'error', 'exposure', 'exposure_usd', 'fix', 'get_blast_radius', 'get_minimum_cut', 'max_iterations', 'path', 'paths', 'paths_found', 'query_graph']

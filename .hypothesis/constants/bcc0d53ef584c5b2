@@ -1,0 +1,4 @@
+# file: D:\vajra\vajra\chaos\simulator.py
+# hypothesis_version: 6.151.9
+
+['Purpose', 'SecurityTesting', 'alibaba_actiontrail', 'aws_guardduty', 'azure_sentinel', 'canary', 'critical', 'disabled', 'dryrun', 'enabled', 'gcp_scc', 'high', 'live', 'mode', 'not configured', 'runs']

@@ -1,0 +1,4 @@
+# file: D:\vajra\vajra\ai\security\supply_chain.py
+# hypothesis_version: 6.151.9
+
+[65536, '<', 'ADMIN_BYPASS', 'DEBUG_MODE_ENABLE', 'IGNORE_SECURITY', 'MASTER_KEY', 'SUDO_OVERRIDE', 'cve', 'installed', 'library', 'onnx<1.15', 'rb', 'tensorflow<2.14', 'torch<2.1.1', 'transformers<4.36', 'vulnerable_below']

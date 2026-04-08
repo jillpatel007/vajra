@@ -1,0 +1,4 @@
+# file: D:\vajra\vajra\data\cloudquery_adapter.py
+# hypothesis_version: 6.151.9
+
+[65536, 'aws', 'aws_', 'aws_ec2_instances', 'aws_iam_roles', 'aws_s3_buckets', 'azure', 'azure_', 'gcp', 'gcp_', 'gcp_storage_buckets', 'global', 'id', 'labels', 'location', 'name', 'project_id', 'rb', 'region', 'self_link']

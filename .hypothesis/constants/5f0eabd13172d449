@@ -1,0 +1,4 @@
+# file: D:\vajra\vajra\discovery\gcp\discoverer.py
+# hypothesis_version: 6.151.9
+
+[0.4, 0.9, 0.95, 1.0, 1.1, 'gcp', 'member', 'project', 'resource', 'role', 'roles/compute.admin', 'roles/editor', 'roles/owner', 'roles/storage.admin', 'roles/viewer', 'scope:project', 'scope_level']

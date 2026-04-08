@@ -1,0 +1,4 @@
+# file: D:\vajra\vajra\analysis\plugins.py
+# hypothesis_version: 6.151.9
+
+[1.5, 1440, 4880000, 4970000, 5290000, 5450000, 6080000, 9770000, 'MIIT authority', 'affected individuals', 'after_minimum_fix', 'anomalies', 'anomaly_analysis', 'applicable', 'asset_id', 'attack_paths', 'average_edges', 'card brand acquirer', 'constrained_cut', 'cost_per_breach', 'deadlines', 'default', 'edges', 'edges_to_cut', 'energy', 'financial', 'financial_analysis', 'gdpr', 'healthcare', 'hipaa', 'hours', 'id', 'industry', 'length', 'max_risk', 'min_cut_analysis', 'minimum_fix_edges', 'mlps2', 'name', 'notify', 'path_analysis', 'paths', 'paths_eliminated', 'paths_found', 'pci_dss', 'pharma', 'reason', 'recommendation', 'regulatory_timer', 'resources', 'roi', 'shadow_it_analysis', 'shadow_it_count', 'standard_cut', 'technology', 'threshold', 'tiered_cuts', 'top5_cuts', 'total', 'total_exposure', 'type']

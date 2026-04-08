@@ -1,0 +1,4 @@
+# file: D:\vajra\vajra\data\layers.py
+# hypothesis_version: 6.151.9
+
+[4.0, 'aggregate', 'asset_type', 'bronze', 'by_provider', 'by_type', 'crown_jewels', 'entry_points', 'global', 'gold', 'id', 'name', 'provider', 'region', 'silver', 'silver_asset', 'total_assets', 'validate + type']

@@ -1,0 +1,4 @@
+# file: D:\vajra\vajra\data\lambda_architecture.py
+# hypothesis_version: 6.151.9
+
+[200, 100000, 'AssumeRole', 'AttachRolePolicy', 'CreateAccessKey', 'CreateBucket', 'CreateRole', 'CreateUser', 'DeleteBucket', 'DeleteRole', 'DeleteUser', 'DetachRolePolicy', 'GetSecretValue', 'PutBucketPolicy', 'PutRolePolicy', 'add_asset', 'add_edge', 'arn', 'assets', 'aws', 'batch', 'deltas_pending', 'event', 'eventName', 'events_processed', 'iam_role', 'id', 'name', 'pending_deltas', 'policyArn', 'provider', 'raw', 'remove_asset', 'requestParameters', 'responseElements', 'role', 'roleName', 'source', 'speed', 'sync_number', 'target', 'timestamp', 'type']

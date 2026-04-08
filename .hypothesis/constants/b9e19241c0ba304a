@@ -1,0 +1,4 @@
+# file: D:\vajra\vajra\discovery\ai_agents\mcp_security.py
+# hypothesis_version: 6.151.9
+
+[0.0, 0.3, 0.5, 0.6, 0.7, 0.75, 0.8, 0.85, 0.95, 0.99, 'access_secrets', 'aws', 'create_resource', 'delete_database', 'delete_resource', 'execute_command', 'global', 'id', 'max_risk', 'modify_iam', 'name', 'permissions', 'provider', 'read_database', 'read_file', 'region', 'send_email', 'server_id', 'servers_discovered', 'target_resources', 'tool_count', 'tools', 'tools_analysed', 'tools_count', 'total_resources', 'writable_resources', 'write_database', 'write_file']

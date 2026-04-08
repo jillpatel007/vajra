@@ -1,0 +1,4 @@
+# file: D:\vajra\vajra\discovery\mlops\scanner.py
+# hypothesis_version: 6.151.9
+
+[0.85, 0.9, 'aws', 'iam_role', 'id', 'internet_accessible', 'name', 'provider', 'public_write', 'region', 'us-east-1', 'vpc_configured']

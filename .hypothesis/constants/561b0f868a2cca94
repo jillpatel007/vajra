@@ -1,0 +1,4 @@
+# file: D:\vajra\vajra\core\report_signer.py
+# hypothesis_version: 6.151.9
+
+[',', ':', '_signed_at', 'payload', 'report signed at %s', 'signature', 'signed_at', 'utf-8']
