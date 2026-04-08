@@ -601,13 +601,12 @@ class SelfHealer:
             action = HealingAction(
                 action_type="human_alert",
                 description=(
-                    "CRITICAL: detection rate below 50% — "
-                    "human intervention required"
+                    "CRITICAL: detection rate below 50% — human intervention required"
                 ),
             )
             actions.append(action)
             logger.critical(
-                "SELF-HEAL CRITICAL: detection below 50%% — " "human must investigate",
+                "SELF-HEAL CRITICAL: detection below 50%% — human must investigate",
             )
 
         self._actions.extend(actions)

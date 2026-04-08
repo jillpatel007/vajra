@@ -33,7 +33,7 @@ class BaseScanner:
 
     def run(self, graph: VajraGraph) -> dict[str, Any]:
         """Run analysis on the graph. Override in subclass."""
-        raise NotImplementedError
+        return {"error": "not implemented"}
 
 
 def get_registry() -> dict[str, type[BaseScanner]]:

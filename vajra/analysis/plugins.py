@@ -106,8 +106,7 @@ class AnomalyAnalysis(BaseScanner):
                 anomalies.append(
                     {
                         "asset_id": asset_id,
-                        "reason": f"over-permissioned: {count} edges "
-                        f"(avg: {avg:.1f})",
+                        "reason": f"over-permissioned: {count} edges (avg: {avg:.1f})",
                     }
                 )
 
@@ -217,7 +216,6 @@ class RegulatoryTimerAnalysis(BaseScanner):
             "attack_paths": len(paths),
             "deadlines": self._DEADLINES,
             "recommendation": (
-                "Incident response plan must be tested "
-                "against all applicable deadlines"
+                "Incident response plan must be tested against all applicable deadlines"
             ),
         }
