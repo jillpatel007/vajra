@@ -24,6 +24,7 @@ dependencies = [
     "pandas>=3.0.2",
     "pydantic>=2.12",
     "pydantic-settings>=2.7",
+    "pyyaml>=6.0.3",
     "requests==2.33.0",
     "rustworkx>=0.17.1",
 ]
