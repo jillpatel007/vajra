@@ -83,11 +83,10 @@ def map_to_mitre(relation_type: str) -> dict[str, str]:
 
 
 def enrich_finding(finding: dict[str, Any]) -> dict[str, Any]:
-    """Add MITRE ATT&CK metadata to a finding."""
+    """Add MITRE ATT&CK metadata to a finding. Returns new dict."""
     relation = finding.get("relation", "")
     mitre = map_to_mitre(relation)
-    finding["mitre_attack"] = mitre
-    return finding
+    return {**finding, "mitre_attack": mitre}
 
 
 def get_coverage() -> dict[str, Any]:

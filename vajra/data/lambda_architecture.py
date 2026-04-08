@@ -46,7 +46,7 @@ class BatchLayer:
         return {
             "sync_number": self._sync_count,
             "timestamp": self._last_sync,
-            "assets": len(graph._idx_to_asset),
+            "assets": len(graph.get_assets()),
         }
 
 

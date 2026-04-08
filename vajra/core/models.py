@@ -106,6 +106,7 @@ class CloudAsset(BaseModel):
         "alibaba",
         "tencent",
         "huawei",
+        "k8s",
     ]
     region: str
     metadata: dict[str, object] = {}
@@ -173,7 +174,7 @@ class GraphEdge:
         High EPSS = likely to be exploited = +30%
         Falco active = being exploited RIGHT NOW = 100%
         """
-        weight = self.risk_weight
+        weight = max(0.0, min(1.0, self.risk_weight))
         if self.cisa_kev:
             weight = min(1.0, weight * 1.5)
         if self.epss_score and self.epss_score > 0.7:

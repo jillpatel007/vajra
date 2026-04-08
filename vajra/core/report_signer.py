@@ -154,7 +154,9 @@ def verify_report(
                 )
                 return False
         except (ValueError, TypeError):
-            pass  # Can't parse timestamp — skip age check
+            # Fail CLOSED: unparseable timestamp = reject
+            logger.warning("unparseable timestamp — rejecting report")
+            return False
 
     canonical = _canonical_bytes(signed_report.payload)
 

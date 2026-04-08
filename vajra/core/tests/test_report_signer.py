@@ -56,7 +56,7 @@ def test_verify_valid_report_returns_true() -> None:
 def test_verify_wrong_key_returns_false() -> None:
     payload = {"findings": ["CVE-2024-1234"]}
     signed = sign_report(payload, SECRET)
-    assert verify_report(signed, "wrong-key") is False
+    assert verify_report(signed, "wrong-key-attacker-uses-32chars!!") is False  # noqa: S106
 
 
 def test_verify_tampered_payload_returns_false() -> None:

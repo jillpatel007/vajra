@@ -232,8 +232,10 @@ class CedarEvaluator:
                 return self._eval_date_gt(value, context_value)
             if operator == "DateLessThan":
                 return self._eval_date_lt(value, context_value)
-            if operator in {"ArnEquals", "ArnLike"}:
+            if operator == "ArnEquals":
                 return self._eval_string_equals(value, context_value)
+            if operator == "ArnLike":
+                return self._eval_arn_like(value, context_value)
         except (ValueError, TypeError) as e:
             logger.warning(
                 "condition evaluation error: %s %s = %s: %s",
@@ -262,6 +264,18 @@ class CedarEvaluator:
             return ConditionResult.NOT_SATISFIED
         except ValueError:
             return ConditionResult.UNKNOWN
+
+    def _eval_arn_like(
+        self,
+        pattern: Any,
+        actual: Any,
+    ) -> ConditionResult:
+        """Wildcard ARN matching (* and ? supported)."""
+        import fnmatch
+
+        if fnmatch.fnmatch(str(actual), str(pattern)):
+            return ConditionResult.SATISFIED
+        return ConditionResult.NOT_SATISFIED
 
     def _eval_string_equals(
         self,

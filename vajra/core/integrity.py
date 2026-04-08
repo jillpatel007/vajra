@@ -46,7 +46,7 @@ _CRITICAL_MODULES: tuple[str, ...] = (
     "vajra/core/report_signer.py",
     "vajra/core/graph_engine.py",
     "vajra/core/models.py",
-    "vajra/discovery/cedar_evaluator.py",
+    "vajra/analysis/cedar_evaluator.py",
     "vajra/core/integrity.py",  # guards itself too
 )
 

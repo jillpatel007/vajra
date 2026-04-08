@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Any
 
 from vajra.core.models import (
+    AssetType,
     CloudAsset,
     EdgeValidity,
     GraphEdge,
@@ -55,14 +56,30 @@ class TencentDiscoverer(BaseDiscoverer):
         for asset in raw_assets:
             if asset.provider != "tencent":
                 continue
-            self._assets[asset.id] = asset
-            classified.append(asset)
+            classified_asset = self._classify(asset)
+            self._assets[classified_asset.id] = classified_asset
+            classified.append(classified_asset)
 
         logger.info(
             "Tencent discovery: %d assets",
             len(classified),
         )
         return classified
+
+    def _classify(self, asset: CloudAsset) -> CloudAsset:
+        """Classify Tencent asset as entry_point or crown_jewel."""
+        is_entry = asset.asset_type == AssetType.RAM_ROLE
+        if not is_entry:
+            return asset
+        return CloudAsset(
+            id=asset.id,
+            name=asset.name,
+            asset_type=asset.asset_type,
+            provider=asset.provider,
+            region=asset.region,
+            metadata=asset.metadata,
+            is_entry_point=is_entry,
+        )
 
     def build_edges(
         self,

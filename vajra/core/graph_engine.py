@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import copy
 import logging
 from dataclasses import dataclass
 
@@ -308,21 +307,21 @@ class VajraGraph:
         genuinely different remediation options.
         """
         results = []
-        # Work on a deep copy so we don't modify the real graph
-        temp_graph = copy.deepcopy(self)
+        excluded: set[tuple[str, str]] = set()
         for _ in range(5):
-            cut = temp_graph.find_minimum_cut()
+            # Build temp graph excluding previously cut edges
+            temp = VajraGraph()
+            for asset in self._idx_to_asset.values():
+                temp.add_asset(asset)
+            for edge in self._edges:
+                if (edge.source, edge.target) not in excluded:
+                    temp.add_edge(edge)
+            cut = temp.find_minimum_cut()
             if not cut.edges_to_cut:
                 break
             results.append(cut)
-            # Remove cut edges from temp graph for next iteration
             for edge in cut.edges_to_cut:
-                temp_graph._edges = [
-                    e
-                    for e in temp_graph._edges
-                    if not (e.source == edge.source and e.target == edge.target)
-                ]
-            temp_graph.invalidate_cache()
+                excluded.add((edge.source, edge.target))
         return results
 
     def get_tiered_cut(self, tier: CrownJewelTier) -> MinCutResult:

@@ -33,14 +33,14 @@ class TestK8sDiscoverer:
             id="target-ns",
             name="production",
             asset_type=AssetType.K8S_CLUSTER_ROLE,
-            provider="aws",
+            provider="k8s",
             region="default",
         )
         disc._assets["sa-uid-1"] = CloudAsset(
             id="sa-uid-1",
             name="default/webapp",
             asset_type=AssetType.K8S_SERVICE_ACCOUNT,
-            provider="aws",
+            provider="k8s",
             region="default",
             is_entry_point=True,
         )
@@ -95,7 +95,7 @@ class TestK8sDiscoverer:
             id="sa-1",
             name="sa",
             asset_type=AssetType.K8S_SERVICE_ACCOUNT,
-            provider="aws",
+            provider="k8s",
             region="default",
         )
         edges = disc._binding_to_edges(

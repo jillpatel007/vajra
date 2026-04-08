@@ -108,7 +108,7 @@ class K8sDiscoverer(BaseDiscoverer):
                 id=sa_id,
                 name=f"{namespace}/{sa_name}",
                 asset_type=AssetType.K8S_SERVICE_ACCOUNT,
-                provider="aws",  # K8s runs on a cloud provider
+                provider="k8s",
                 region=namespace,
                 is_entry_point=True,
             )

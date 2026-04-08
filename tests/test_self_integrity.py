@@ -69,12 +69,12 @@ def test_tampered_file_detected() -> None:
         manifest = generate_manifest(project, INTEGRITY_KEY)
 
         # Tamper with cedar evaluator
-        tampered_file = project / "vajra/discovery/cedar_evaluator.py"
+        tampered_file = project / "vajra/analysis/cedar_evaluator.py"
         tampered_file.write_text("# BACKDOOR: default-allow everything\n")
 
         report = verify_manifest(project, manifest, INTEGRITY_KEY)
         assert report.passed is False
-        assert "vajra/discovery/cedar_evaluator.py" in report.tampered_files
+        assert "vajra/analysis/cedar_evaluator.py" in report.tampered_files
     finally:
         shutil.rmtree(project)
 
