@@ -1,10 +1,14 @@
-﻿name: CI
+name: CI
 
 on:
   push:
     branches: [main]
   pull_request:
     branches: [main]
+
+# FIX CodeQL CWE-275: restrict workflow permissions
+permissions:
+  contents: read
 
 jobs:
   quality:

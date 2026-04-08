@@ -128,9 +128,7 @@ class K8sDiscoverer(BaseDiscoverer):
                 env_name,
             ):
                 logger.warning(
-                    "secret exposure: SA %s has %s in env",
-                    pod_sa,
-                    env_name,
+                    "secret exposure detected in SA (redacted)",
                 )
 
         logger.info(
