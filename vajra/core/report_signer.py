@@ -77,6 +77,13 @@ def sign_report(payload: dict[str, Any], secret_key: str) -> SignedReport:
     if not secret_key:
         msg = "HMAC secret key is required for report signing"
         raise ValueError(msg)
+    # FIX #5: Enforce minimum key length (256 bits = 32 bytes)
+    if len(secret_key) < 32:
+        msg = (
+            f"HMAC key too short ({len(secret_key)} chars). "
+            "Minimum 32 characters required for security."
+        )
+        raise ValueError(msg)
 
     signed_at = datetime.now(UTC).isoformat()
 
@@ -102,7 +109,11 @@ def sign_report(payload: dict[str, Any], secret_key: str) -> SignedReport:
     )
 
 
-def verify_report(signed_report: SignedReport, secret_key: str) -> bool:
+def verify_report(
+    signed_report: SignedReport,
+    secret_key: str,
+    max_age_seconds: int | None = None,
+) -> bool:
     """Verify a report's HMAC-SHA256 signature.
 
     Args:
@@ -120,6 +131,30 @@ def verify_report(signed_report: SignedReport, secret_key: str) -> bool:
     if not secret_key:
         msg = "HMAC secret key is required for verification"
         raise ValueError(msg)
+    if len(secret_key) < 32:
+        msg = (
+            f"HMAC key too short ({len(secret_key)} chars). "
+            "Minimum 32 characters required for security."
+        )
+        raise ValueError(msg)
+
+    # FIX #10: Check report freshness (reject stale reports)
+    signed_at = signed_report.payload.get("_signed_at", "")
+    if signed_at and max_age_seconds is not None:
+        from datetime import UTC, datetime
+
+        try:
+            report_time = datetime.fromisoformat(signed_at)
+            age = (datetime.now(UTC) - report_time).total_seconds()
+            if age > max_age_seconds:
+                logger.warning(
+                    "report too old: %.0fs (max: %ds)",
+                    age,
+                    max_age_seconds,
+                )
+                return False
+        except (ValueError, TypeError):
+            pass  # Can't parse timestamp — skip age check
 
     canonical = _canonical_bytes(signed_report.payload)
 

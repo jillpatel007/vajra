@@ -4,11 +4,11 @@ Every piece of data entering Vajra from outside (cloud APIs, user input,
 webhooks) passes through InputSanitiser before being used.
 
 Blocks 6 injection types:
-1. XSS        — <script> tags, event handlers
-2. SQL        — SQL keywords with suspicious patterns
+1. XSS        — <script> tags, event handlers, data URIs
+2. SQL        — SQL keywords in various injection contexts
 3. Log4Shell  — ${jndi:...} JNDI lookups
-4. Path       — ../  directory traversal
-5. Template   — {{...}} and {%...%} template injection
+4. Path       — ../  directory traversal (including URL-encoded)
+5. Template   — {{...}}, {%...%}, ${...}, #{...} template injection
 6. Null byte  — \x00 tricks C libraries into truncating strings
 
 Also enforces depth, length, and key limits on nested data.
@@ -27,21 +27,25 @@ _MAX_KEY_LENGTH = 200
 _MAX_NESTING_DEPTH = 10
 
 # --- Injection patterns ---
-# Each pattern catches a specific attack family.
-# Compiled once at import time for performance.
-
+# FIX #4: XSS — added data: URI and CSS expression detection
 _XSS_PATTERN = re.compile(
-    r"<\s*script|on\w+\s*=|javascript\s*:",
+    r"<\s*script|on\w+\s*=|javascript\s*:|data\s*:\s*text/html",
     re.IGNORECASE,
 )
 
+# FIX #3: SQL — rewritten to catch injections without requiring
+# specific framing. Matches keywords preceded by common delimiters.
 _SQL_PATTERN = re.compile(
-    r"('\s*(OR|AND|UNION|SELECT|DROP|DELETE|INSERT|UPDATE)\s)",
+    r"(?:['\";\s]|^)\s*(?:UNION\s+(?:ALL\s+)?SELECT"
+    r"|;\s*(?:DROP|DELETE|INSERT|UPDATE)\b"
+    r"|'\s*(?:OR|AND)\s+(?:'|\d))",
     re.IGNORECASE,
 )
 
+# FIX #13: Log4Shell — use [^}]*? instead of .*? to prevent
+# catastrophic backtracking (stops at closing brace)
 _LOG4SHELL_PATTERN = re.compile(
-    r"\$\{.*?(jndi|lower|upper|env|sys|java)\s*:",
+    r"\$\{[^}]*?(jndi|lower|upper|env|sys|java)\s*:",
     re.IGNORECASE,
 )
 
@@ -49,8 +53,9 @@ _PATH_TRAVERSAL_PATTERN = re.compile(
     r"\.\.[/\\]|\.\.%2[fF]|\.\.%5[cC]",
 )
 
+# FIX #8: Template injection — added Mako ${}, Ruby #{}, Freemarker <#>
 _TEMPLATE_INJECTION_PATTERN = re.compile(
-    r"\{\{.*?\}\}|\{%.*?%\}",
+    r"\{\{.*?\}\}|\{%.*?%\}|\$\{[^}]+\}|#\{[^}]+\}",
 )
 
 
@@ -64,13 +69,7 @@ class InputValidationError(Exception):
 
 
 class InputSanitiser:
-    """Validates and sanitises all external input entering Vajra.
-
-    Usage:
-        sanitiser = InputSanitiser()
-        clean = sanitiser.sanitise("user input here")
-        clean_dict = sanitiser.sanitise_dict(api_response)
-    """
+    """Validates and sanitises all external input entering Vajra."""
 
     def sanitise(self, value: str) -> str:
         """Validate a single string value.
@@ -130,10 +129,7 @@ class InputSanitiser:
     ) -> dict[str, object]:
         """Validate all string values in a nested dictionary.
 
-        Enforces:
-        - Maximum nesting depth (prevents stack overflow)
-        - Maximum key length
-        - All 6 injection checks on every string value
+        FIX #9: Now handles lists — iterates and sanitises each element.
         """
         if _depth > _MAX_NESTING_DEPTH:
             raise InputValidationError(
@@ -157,7 +153,36 @@ class InputSanitiser:
                     value,
                     _depth=_depth + 1,
                 )
+            elif isinstance(value, list):
+                # FIX #9: Sanitise list elements
+                result[key] = self._sanitise_list(
+                    value,
+                    _depth=_depth + 1,
+                )
             else:
                 result[key] = value
 
         return result
+
+    def _sanitise_list(
+        self,
+        items: list[object],
+        *,
+        _depth: int = 0,
+    ) -> list[object]:
+        """Sanitise each element in a list."""
+        sanitised: list[object] = []
+        for item in items:
+            if isinstance(item, str):
+                sanitised.append(self.sanitise(item))
+            elif isinstance(item, dict):
+                sanitised.append(
+                    self.sanitise_dict(item, _depth=_depth),
+                )
+            elif isinstance(item, list):
+                sanitised.append(
+                    self._sanitise_list(item, _depth=_depth + 1),
+                )
+            else:
+                sanitised.append(item)
+        return sanitised

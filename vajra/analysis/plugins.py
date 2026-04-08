@@ -91,7 +91,7 @@ class AnomalyAnalysis(BaseScanner):
 
         # Count edges per asset
         edge_counts: dict[str, int] = {}
-        for edge in graph._edges:
+        for edge in graph.get_edges():
             edge_counts[edge.source] = edge_counts.get(edge.source, 0) + 1
 
         if not edge_counts:
@@ -173,7 +173,7 @@ class ShadowITAnalysis(BaseScanner):
 
     def run(self, graph: VajraGraph) -> dict[str, Any]:
         shadow: list[dict[str, str]] = []
-        for asset in graph._idx_to_asset.values():
+        for asset in graph.get_assets().values():
             if asset.is_shadow_it:
                 shadow.append(
                     {

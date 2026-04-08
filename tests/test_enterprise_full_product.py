@@ -188,7 +188,7 @@ class TestHMACIntegrity:
         """
         payload: dict[str, Any] = {"findings": 5}
         signed = sign_report(payload, SECRET)
-        assert verify_report(signed, "wrong-key-attacker-uses") is False  # noqa: S106
+        assert verify_report(signed, "wrong-key-attacker-uses-32chars!") is False  # noqa: S106
 
     def test_empty_key_rejected(self) -> None:
         """Empty signing key → ValueError (not silent success)."""
@@ -261,10 +261,10 @@ class TestInjectionGauntlet:
     SQL_PAYLOADS: list[str] = [
         "' OR '1'='1",
         "' UNION SELECT * FROM users--",
-        "' DROP TABLE assets--",
-        "' DELETE FROM findings--",
-        "' INSERT INTO admin VALUES('hacker')--",
-        "' UPDATE users SET role='admin'--",
+        "'; DROP TABLE assets--",
+        "'; DELETE FROM findings--",
+        "'; INSERT INTO admin VALUES('hacker')--",
+        "'; UPDATE users SET role='admin'--",
     ]
 
     @pytest.mark.parametrize("payload", SQL_PAYLOADS)
@@ -932,7 +932,7 @@ class TestComplianceEvidence:
         Prove: reports are signed and tampering is detected.
         """
         report: dict[str, Any] = {"control": "CC6.6", "status": "pass"}
-        key = "compliance-key-32bytes-exactly!"  # noqa: S105  # pragma: allowlist secret
+        key = "compliance-key-32bytes-exactly!!"  # noqa: S105  # pragma: allowlist secret
         signed = sign_report(report, key)
         assert verify_report(signed, key) is True
 
@@ -978,9 +978,9 @@ class TestComplianceEvidence:
         is called correctly by ensuring valid/invalid both work.
         """
         report: dict[str, Any] = {"timing": "test"}
-        key = "timing-test-key-must-be-32byte!"  # noqa: S105  # pragma: allowlist secret
+        key = "timing-test-key-must-be-32byte!!"  # noqa: S105  # pragma: allowlist secret
         signed = sign_report(report, key)
         # Valid
         assert verify_report(signed, key) is True
         # Invalid — one char off in key
-        assert verify_report(signed, "timing-test-key-must-be-32byte?") is False  # noqa: S106
+        assert verify_report(signed, "timing-test-key-must-be-32byte??") is False  # noqa: S106

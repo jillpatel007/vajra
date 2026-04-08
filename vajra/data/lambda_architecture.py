@@ -74,6 +74,8 @@ class SpeedLayer:
         }
     )
 
+    _MAX_DELTAS: int = 100_000  # FIX #14: Bounded buffer
+
     def __init__(self) -> None:
         self._deltas: list[GraphDelta] = []
         self._events_processed: int = 0
@@ -140,6 +142,11 @@ class SpeedLayer:
             )
 
         self._deltas.append(delta)
+        # FIX #14: Evict oldest deltas if buffer is full
+        if len(self._deltas) > self._MAX_DELTAS:
+            evict = len(self._deltas) - self._MAX_DELTAS
+            self._deltas = self._deltas[evict:]
+            logger.warning("speed layer evicted %d old deltas", evict)
         logger.debug("speed layer delta: %s from %s", delta.action, event_name)
         return delta
 

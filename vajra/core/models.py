@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import hashlib
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import UTC, datetime
 from enum import Enum
 from typing import Literal
 
@@ -116,7 +116,9 @@ class CloudAsset(BaseModel):
     crown_jewel_tier: CrownJewelTier | None = None
     ai_signals: dict[str, object] = {}
     network_validated: bool = False
-    first_seen: datetime = Field(default_factory=datetime.utcnow)
+    first_seen: datetime = Field(
+        default_factory=lambda: datetime.now(UTC),
+    )
 
     def integrity_hash(self) -> str:
         """SHA-256 fingerprint of this asset.

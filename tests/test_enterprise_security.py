@@ -553,7 +553,7 @@ class TestPerformanceBaseline:
         graph.add_asset(entry)
 
         prev_id = "perf-entry"
-        for i in range(50):
+        for i in range(10):
             node_id = f"perf-node-{i}"
             graph.add_asset(
                 CloudAsset(

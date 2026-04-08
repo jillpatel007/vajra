@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import copy
 import logging
 from dataclasses import dataclass
 
@@ -13,6 +14,10 @@ from vajra.core.models import (
 )
 
 logger = logging.getLogger(__name__)
+
+# FIX #1: Hard limits to prevent path explosion DoS
+_MAX_PATHS = 10_000
+_MAX_PATH_LENGTH = 15
 
 
 @dataclass
@@ -81,7 +86,27 @@ class VajraGraph:
                 return False
         return True
 
-    def find_attack_paths(self) -> list[list[GraphEdge]]:
+    # --- Public accessors (FIX #12) ---
+
+    def get_edges(self) -> list[GraphEdge]:
+        """Public accessor for edges (avoids private field access)."""
+        return list(self._edges)
+
+    def get_assets(self) -> dict[int, CloudAsset]:
+        """Public accessor for assets (avoids private field access)."""
+        return dict(self._idx_to_asset)
+
+    # --- Path finding ---
+
+    def find_attack_paths(
+        self,
+        max_paths: int = _MAX_PATHS,
+        max_depth: int = _MAX_PATH_LENGTH,
+    ) -> list[list[GraphEdge]]:
+        """Find attack paths with DoS protection.
+
+        FIX #1: Hard cap on paths and depth prevents path explosion.
+        """
         if self._cache_valid:
             return self._cached_paths
         entry_points = [
@@ -92,9 +117,24 @@ class VajraGraph:
         ]
         paths: list[list[GraphEdge]] = []
         for source in entry_points:
+            if len(paths) >= max_paths:
+                logger.warning(
+                    "path limit reached (%d), stopping enumeration",
+                    max_paths,
+                )
+                break
             for target in crown_jewels:
-                raw_paths = rx.all_simple_paths(self._graph, source, target)
+                if len(paths) >= max_paths:
+                    break
+                raw_paths = rx.all_simple_paths(
+                    self._graph,
+                    source,
+                    target,
+                    cutoff=max_depth,
+                )
                 for node_path in raw_paths:
+                    if len(paths) >= max_paths:
+                        break
                     edge_path = self._nodes_to_edges(node_path)
                     if edge_path:
                         paths.append(edge_path)
@@ -104,8 +144,15 @@ class VajraGraph:
 
     def _nodes_to_edges(self, node_path: list[int]) -> list[GraphEdge]:
         edges = []
-        for source_idx, target_idx in zip(node_path, node_path[1:], strict=False):
-            edge_data = self._graph.get_edge_data(source_idx, target_idx)
+        for source_idx, target_idx in zip(
+            node_path,
+            node_path[1:],
+            strict=False,
+        ):
+            edge_data = self._graph.get_edge_data(
+                source_idx,
+                target_idx,
+            )
             if edge_data is not None:
                 edges.append(edge_data)
         return edges
@@ -144,12 +191,25 @@ class VajraGraph:
             self._graph.remove_node(idx)
 
     def find_minimum_cut(self) -> MinCutResult:
+        """FIX #11: Only select edges in attack-path direction.
+
+        Still uses Stoer-Wagner on undirected graph (only available
+        algorithm in rustworkx), but filters results to only include
+        edges that exist in the DIRECTED graph in the forward direction
+        (source → target matching an actual attack path direction).
+        """
         source_idx, sink_idx, virtual = self._add_virtual_nodes()
         undirected: rx.PyGraph = rx.PyGraph()
         idx_map: dict[int, int] = {}
         for idx in self._idx_to_asset:
             new_idx = undirected.add_node(idx)
             idx_map[idx] = new_idx
+        # Also add virtual nodes to undirected graph
+        vs_new = undirected.add_node(source_idx)
+        vt_new = undirected.add_node(sink_idx)
+        idx_map[source_idx] = vs_new
+        idx_map[sink_idx] = vt_new
+
         for edge in self._edges:
             source_i = self._asset_to_idx.get(edge.source)
             target_i = self._asset_to_idx.get(edge.target)
@@ -167,6 +227,13 @@ class VajraGraph:
                     idx_map[target_i],
                     weight,
                 )
+        # Add virtual edges
+        for idx, asset in self._idx_to_asset.items():
+            if asset.is_entry_point and idx in idx_map:
+                undirected.add_edge(vs_new, idx_map[idx], 999999999.0)
+            if asset.is_crown_jewel and idx in idx_map:
+                undirected.add_edge(idx_map[idx], vt_new, 999999999.0)
+
         cut_result = rx.stoer_wagner_min_cut(
             undirected,
             weight_fn=lambda e: e if isinstance(e, float) else 1.0,
@@ -180,6 +247,8 @@ class VajraGraph:
             )
         _cut_value, partition = cut_result
         partition_set = set(partition)
+        # FIX #11: Only include edges that go in the attack direction
+        # (from entry-side partition toward crown-jewel-side partition)
         cut_edges = []
         for edge in self._edges:
             source_i = self._asset_to_idx.get(edge.source)
@@ -201,21 +270,8 @@ class VajraGraph:
         )
 
     def find_constrained_cut(self) -> MinCutResult:
-        """Find minimum cut that NEVER selects business_critical nodes.
-
-        Why a separate method?
-            find_minimum_cut() uses high weights (999999999) to discourage
-            cutting business_critical edges — but with enough other paths,
-            the algorithm could still pick them. This method guarantees
-            they are never selected by filtering them from the result.
-
-        How:
-            1. Run the standard minimum cut
-            2. Remove any edges touching business_critical nodes
-            3. Mark result as constrained
-        """
+        """Find minimum cut that NEVER selects business_critical nodes."""
         result = self.find_minimum_cut()
-        # Filter out edges where source or target is business_critical
         safe_edges = []
         for edge in result.edges_to_cut:
             source_idx = self._asset_to_idx.get(edge.source)
@@ -248,16 +304,31 @@ class VajraGraph:
         return [self._idx_to_asset[i] for i in reachable if i in self._idx_to_asset]
 
     def find_top5_cuts(self) -> list[MinCutResult]:
+        """FIX #2: Each cut removes previous cut edges, producing
+        genuinely different remediation options.
+        """
         results = []
+        # Work on a deep copy so we don't modify the real graph
+        temp_graph = copy.deepcopy(self)
         for _ in range(5):
-            cut = self.find_minimum_cut()
+            cut = temp_graph.find_minimum_cut()
             if not cut.edges_to_cut:
                 break
             results.append(cut)
+            # Remove cut edges from temp graph for next iteration
+            for edge in cut.edges_to_cut:
+                temp_graph._edges = [
+                    e
+                    for e in temp_graph._edges
+                    if not (e.source == edge.source and e.target == edge.target)
+                ]
+            temp_graph.invalidate_cache()
         return results
 
     def get_tiered_cut(self, tier: CrownJewelTier) -> MinCutResult:
+        """FIX #7: Invalidate cache before and after mutation."""
         original = self._idx_to_asset.copy()
+        self.invalidate_cache()  # FIX #7
         for idx, asset in list(self._idx_to_asset.items()):
             if asset.is_crown_jewel and asset.crown_jewel_tier != tier:
                 self._idx_to_asset[idx] = CloudAsset(
@@ -272,4 +343,5 @@ class VajraGraph:
             result = self.find_minimum_cut()
         finally:
             self._idx_to_asset = original
+            self.invalidate_cache()  # FIX #7
         return result
