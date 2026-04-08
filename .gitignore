@@ -1,4 +1,4 @@
-# Python-generated files
+# Python
 __pycache__/
 *.py[oc]
 build/
@@ -8,3 +8,32 @@ wheels/
 
 # Virtual environments
 .venv
+
+# Internal docs (strategy, methodology — not public)
+docs/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+bandit_report.txt
+*.duckdb
+*.duckdb.wal
+
+# Demo / scratch
+scripts/demo_*.py
+
+# Claude worktrees
+.claude/worktrees/
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/

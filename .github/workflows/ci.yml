@@ -1,0 +1,40 @@
+﻿name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+
+      - name: Set up Python
+        run: uv python install 3.13
+
+      - name: Install dependencies
+        run: uv sync --dev
+
+      - name: Install dev tools explicitly
+        run: uv pip install ruff mypy bandit pytest pytest-cov pytest-asyncio
+
+      - name: Lint (ruff)
+        run: uv run ruff check vajra/
+
+      - name: Type check (mypy)
+        run: uv run mypy vajra/ --ignore-missing-imports
+
+      - name: Security scan (bandit)
+        run: uv run bandit -r vajra/ -ll -q
+
+      - name: Supply chain audit (pip-audit)
+        run: uv run pip-audit --ignore-vuln CVE-2026-4539
+
+      - name: Tests
+        run: uv run pytest tests/ -v --tb=short

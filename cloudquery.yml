@@ -1,0 +1,57 @@
+# CloudQuery configuration for Vajra
+# Syncs cloud assets from AWS, Azure, GCP into DuckDB for graph analysis.
+#
+# Usage:
+#   cloudquery sync cloudquery.yml
+#
+# This writes scan results to vajra_scan.duckdb, which the
+# CloudQueryAdapter reads to populate VajraGraph.
+
+kind: source
+spec:
+  name: aws
+  path: cloudquery/aws
+  version: "v27.0.0"
+  tables:
+    - aws_iam_roles
+    - aws_iam_users
+    - aws_s3_buckets
+    - aws_ec2_instances
+    - aws_lambda_functions
+    - aws_secretsmanager_secrets
+  destinations:
+    - duckdb
+
+---
+kind: source
+spec:
+  name: azure
+  path: cloudquery/azure
+  version: "v14.0.0"
+  tables:
+    - azure_ad_service_principals
+    - azure_keyvault_vaults
+    - azure_storage_accounts
+  destinations:
+    - duckdb
+
+---
+kind: source
+spec:
+  name: gcp
+  path: cloudquery/gcp
+  version: "v16.0.0"
+  tables:
+    - gcp_iam_service_accounts
+    - gcp_storage_buckets
+  destinations:
+    - duckdb
+
+---
+kind: destination
+spec:
+  name: duckdb
+  path: cloudquery/duckdb
+  version: "v7.0.0"
+  spec:
+    connection_string: vajra_scan.duckdb
