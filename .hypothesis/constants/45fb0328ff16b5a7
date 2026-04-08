@@ -1,4 +1,0 @@
-# file: D:\vajra\vajra\cli.py
-# hypothesis_version: 6.151.9
-
-[0.85, 0.9, ',', '--demo', '--help', '--output', '--providers', '--verbose', '-h', '-v', '=', 'Admin Role', 'Customer Data', 'Vajra Setup Wizard\n', 'Web Server', '__main__', 'ask', 'assets', 'attack_paths', 'aws', 'change', 'cut_recommendations', 'demo-ec2', 'demo-role', 'demo-s3', 'diff', 'edges', 'global', 'json', 'minimum_cut_edges', 'paths', 'paths_after', 'paths_before', 'payload', 'plan', 'providers', 'risk', 'scan', 'setup', 'signature', 'signed_at', 'table', 'us-east-1', 'verify']

@@ -1,4 +1,0 @@
-# file: D:\vajra\vajra\mlsecops\model_lineage.py
-# hypothesis_version: 6.151.9
-
-['approved_at', 'approved_by', 'code_commit', 'created_at', 'data_hash', 'hyperparameters', 'metrics', 'model_hash', 'model_id', 'requirements_hash']

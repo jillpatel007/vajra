@@ -1,4 +1,0 @@
-# file: D:\vajra\vajra\core\models.py
-# hypothesis_version: 6.151.9
-
-[0.0, 0.7, 1.0, 1.3, 1.5, '0.1.0', 'AssetType', 'CloudAsset', 'CrownJewelTier', 'EdgeValidity', 'GraphEdge', 'NetworkValidity', 'RelationType', 'ai_agent', 'alibaba', 'assumed_valid', 'aws', 'azure', 'blob_container', 'blocked', 'can_act_as', 'can_assume', 'cicd_pipeline', 'condition_blocked', 'contains_secret', 'critical', 'cross_account', 'dataset', 'delegates_to', 'depends_on', 'ec2_instance', 'gcp', 'gcs_bucket', 'has_access', 'has_role', 'high', 'huawei', 'iam_role', 'iam_user', 'k8s', 'k8s_cluster_role', 'k8s_service_account', 'key_vault', 'lambda_function', 'low', 'managed_identity', 'mcp_server', 'mcp_tool_access', 'medium', 'ml_model', 'ml_training_job', 'oss_bucket', 'ram_role', 'rds_database', 'reachable', 'reads_from', 's3_bucket', 'secret', 'service_account', 'service_principal', 'supply_chain_risk', 'tencent', 'trains_on', 'trusts', 'unknown', 'valid', 'virtual', 'writes_to']

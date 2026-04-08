@@ -1,4 +1,0 @@
-# file: D:\vajra\vajra\core\pattern_intelligence.py
-# hypothesis_version: 6.151.9
-
-[0.05, 0.15, 0.3, 0.5, 1.0, 1.5, 100, '.vajra', 'A', 'B', 'C', 'D', 'average', 'average_paths', 'below average', 'critical', 'edge_types', 'first_seen', 'frequency', 'grade', 'has_priv_esc', 'high', 'insufficient_data', 'last_seen', 'last_updated', 'low', 'medium', 'message', 'most_common', 'path_length', 'pattern_count', 'pattern_hash', 'patterns', 'patterns.json', 'percentile', 'scan_count', 'scans_in_benchmark', 'status', 'top 10%', 'top 30%', 'total_scans', 'unique_patterns', 'your_paths']

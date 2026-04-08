@@ -37,3 +37,4 @@ scripts/demo_*.py
 .pytest_cache/
 .coverage
 htmlcov/
+.hypothesis/

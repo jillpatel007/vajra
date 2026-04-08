@@ -1,4 +1,0 @@
-# file: D:\vajra\vajra\ai\security\red_team.py
-# hypothesis_version: 6.151.9
-
-[0.0, '../../../etc/shadow', 'confidence', 'jndi_in_description', 'log4shell', 'name', 'path_traversal', 'path_traversal_in_id', 'payload', 'prompt_injection', 'prompt_override', 'sql', 'sql_in_resource_name', 'template', 'template_in_name', 'type', 'xss', 'xss_in_query']

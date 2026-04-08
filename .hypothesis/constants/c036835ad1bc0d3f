@@ -1,4 +1,0 @@
-# file: D:\vajra\vajra\core\integrity.py
-# hypothesis_version: 6.151.9
-
-[65536, ',', ', ', '1.0', ':', 'FAIL', 'PASS', 'details', 'files', 'integrity_passed', 'missing_files', 'module_count', 'rb', 'signature', 'tampered_files', 'utf-8', 'vajra/core/crypto.py', 'vajra/core/models.py', 'version']

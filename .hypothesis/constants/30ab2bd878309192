@@ -1,4 +1,0 @@
-# file: D:\vajra\vajra\analysis\cedar_evaluator.py
-# hypothesis_version: 6.151.9
-
-['ArnEquals', 'ArnLike', 'Bool', 'DateGreaterThan', 'DateLessThan', 'IpAddress', 'NotIpAddress', 'StringEquals', 'StringNotEquals', 'not_satisfied', 'satisfied', 'total_evaluations', 'true', 'unknown', 'unknown_conditions']

@@ -1,4 +1,0 @@
-# file: D:\vajra\vajra\ai\models.py
-# hypothesis_version: 6.151.9
-
-[0.0, 1.0, 100, 300, 500, 1000, 'critical', 'high', 'info', 'low', 'medium']

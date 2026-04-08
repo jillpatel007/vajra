@@ -1,4 +1,0 @@
-# file: D:\vajra\vajra\core\learning.py
-# hypothesis_version: 6.151.9
-
-[0.0, ' → ', '.vajra', 'IP addresses', 'account numbers', 'asset names or IDs', 'confirmed', 'confirmed_count', 'edge_types', 'false_negative', 'false_negatives', 'false_positive', 'false_positives', 'feedback_type', 'finding_id', 'fn_count', 'fp_count', 'fp_rate', 'last_updated', 'learning.json', 'path_length', 'pattern_hash', 'region names', 'severity_override', 'timestamp', 'total_feedback', 'user_comment', 'what_is_NOT_shared', 'what_is_shared', 'your_control']

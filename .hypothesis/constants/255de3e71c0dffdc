@@ -1,4 +1,0 @@
-# file: D:\vajra\vajra\discovery\common\supply_chain.py
-# hypothesis_version: 6.151.9
-
-[0.3, 0.5, 0.6, 0.8, 0.95, '!=', '#', '-', '<=', '==', '>=', '^~>=<', 'aws', 'critical', 'cve', 'dependencies', 'devDependencies', 'fix_version', 'global', 'high', 'low', 'medium', 'name', 'package', 'packages_scanned', 'severity', 'unknown', 'version', '~=']

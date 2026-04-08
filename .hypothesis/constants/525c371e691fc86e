@@ -1,4 +1,0 @@
-# file: D:\vajra\vajra\discovery\k8s\discoverer.py
-# hypothesis_version: 6.151.9
-
-[0.6, 0.99, 1.0, 1.05, 'API_KEY', 'CREDENTIALS', 'ClusterRoleBinding', 'PASSWORD', 'PRIVATE_KEY', 'RoleBinding', 'SECRET', 'TOKEN', 'admin', 'cluster-admin', 'default', 'edit', 'env_name', 'k8s', 'kubernetes', 'name', 'namespace', 'role_name', 'scope:cluster', 'service_account_uid', 'subject_uid', 'target_uid', 'type', 'uid']

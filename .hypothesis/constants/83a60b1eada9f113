@@ -1,4 +1,0 @@
-# file: D:\vajra\vajra\analysis\network_reachability.py
-# hypothesis_version: 6.151.9
-
-['*', 'action', 'asset not found', 'deny', 'security_groups', 'source', 'total_checks', 'vpc_a', 'vpc_b', 'vpc_map', 'vpc_peerings']
