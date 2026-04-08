@@ -34,6 +34,7 @@ def cmd_scan(
     output: str = "json",
     demo: bool = False,
     verbose: bool = False,
+    db_path: str = "vajra_scan.duckdb",
 ) -> int:
     """Scan cloud providers for attack paths.
 
@@ -113,7 +114,7 @@ def cmd_scan(
             )
         )
     else:
-        engine = ScanEngine()
+        engine = ScanEngine(db_path=Path(db_path))
         provider_tuple = tuple(p.strip() for p in providers.split(","))
         graph = engine.scan_sync(providers=provider_tuple)
 
@@ -307,16 +308,19 @@ def main() -> int:
         output = "table"
         demo = False
         verbose = False
+        db_path = "vajra_scan.duckdb"
         for i, flag in enumerate(flags):
             if flag == "--providers" and i + 1 < len(flags):
                 providers = flags[i + 1]
             elif flag == "--output" and i + 1 < len(flags):
                 output = flags[i + 1]
+            elif flag == "--db" and i + 1 < len(flags):
+                db_path = flags[i + 1]
             elif flag == "--demo":
                 demo = True
             elif flag in ("--verbose", "-v"):
                 verbose = True
-        return cmd_scan(providers, output, demo, verbose)
+        return cmd_scan(providers, output, demo, verbose, db_path)
 
     if command == "diff":
         a = flags[0] if len(flags) > 0 else ""

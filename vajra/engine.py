@@ -1,9 +1,6 @@
 """ScanEngine — runs all discoverers concurrently, returns populated graph.
 
 Uses asyncio.TaskGroup to run all 7 cloud providers in parallel.
-Sequential scanning is too slow for production — an attacker could
-modify infrastructure mid-scan if we take 5 minutes per provider.
-
 Concurrent scanning = all providers at once = scan completes faster
 than any single provider could change.
 """
@@ -21,7 +18,8 @@ from vajra.core.models import CloudAsset, GraphEdge
 
 logger = logging.getLogger(__name__)
 
-# All supported providers
+_DEFAULT_DB = Path("vajra_scan.duckdb")
+
 _PROVIDERS: tuple[str, ...] = (
     "aws",
     "azure",
@@ -34,14 +32,10 @@ _PROVIDERS: tuple[str, ...] = (
 
 
 class ScanEngine:
-    """Orchestrates concurrent multi-cloud discovery.
-
-    Runs all discoverers in parallel using asyncio.TaskGroup,
-    streams results into a single VajraGraph.
-    """
+    """Orchestrates concurrent multi-cloud discovery."""
 
     def __init__(self, db_path: Path | None = None) -> None:
-        self._db_path = db_path
+        self._db_path = db_path or _DEFAULT_DB
         self._graph = VajraGraph()
         self._scan_time: float = 0.0
         self._assets_discovered: int = 0
@@ -50,11 +44,7 @@ class ScanEngine:
         self,
         providers: tuple[str, ...] = _PROVIDERS,
     ) -> VajraGraph:
-        """Run all providers concurrently, return populated graph.
-
-        Uses asyncio.TaskGroup for structured concurrency.
-        All providers run in parallel — if one fails, others continue.
-        """
+        """Run all providers concurrently, return populated graph."""
         start = time.perf_counter()
         results: list[tuple[list[CloudAsset], list[GraphEdge]]] = []
 
@@ -66,12 +56,10 @@ class ScanEngine:
                 )
                 tasks.append(task)
 
-        # Collect results from all tasks
         for task in tasks:
             assets, edges = task.result()
             results.append((assets, edges))
 
-        # Stream into graph (sequential — graph is not thread-safe)
         for assets, edges in results:
             for asset in assets:
                 self._graph.add_asset(asset)
@@ -94,16 +82,51 @@ class ScanEngine:
     ) -> tuple[list[CloudAsset], list[GraphEdge]]:
         """Discover assets for a single provider.
 
-        Runs in a separate task — failures don't block other providers.
-        Returns empty lists on error (graceful degradation).
+        Dynamically imports and instantiates the provider's discoverer.
+        Falls back gracefully if DuckDB file doesn't exist or
+        provider has no discoverer registered.
         """
         try:
-            # In production: instantiate provider-specific discoverer
-            # For now: return empty (discoverers need real DB)
-            logger.debug("discovering %s...", provider)
-            # Simulate async work (real discoverers would do I/O)
+            if not self._db_path.exists():
+                logger.warning(
+                    "DuckDB file not found: %s — run 'cloudquery sync' first",
+                    self._db_path,
+                )
+                return [], []
+
+            # Dynamic import triggers __init_subclass__ auto-registration
+            try:
+                __import__(f"vajra.discovery.{provider}.discoverer")
+            except ImportError:
+                logger.debug(
+                    "no discoverer module for %s",
+                    provider,
+                )
+                return [], []
+
+            from vajra.discovery.mapper import BaseDiscoverer
+
+            discoverer_cls = BaseDiscoverer.get_discoverer(provider)
+            if discoverer_cls is None:
+                logger.debug(
+                    "no discoverer registered for %s",
+                    provider,
+                )
+                return [], []
+
+            logger.info("discovering %s...", provider)
+            discoverer = discoverer_cls(self._db_path)
+            assets = discoverer.discover()
+            logger.info(
+                "%s: discovered %d assets",
+                provider,
+                len(assets),
+            )
+
+            # Yield control for concurrency
             await asyncio.sleep(0)
-            return [], []
+            return assets, []
+
         except Exception as e:
             logger.warning(
                 "provider %s failed: %s (continuing with others)",
@@ -116,20 +139,15 @@ class ScanEngine:
         self,
         providers: tuple[str, ...] = _PROVIDERS,
     ) -> VajraGraph:
-        """Synchronous wrapper for scan_all().
-
-        For CLI usage where asyncio event loop isn't running.
-        """
+        """Synchronous wrapper for scan_all()."""
         return asyncio.run(self.scan_all(providers))
 
     @property
     def graph(self) -> VajraGraph:
-        """Return the populated graph."""
         return self._graph
 
     @property
     def stats(self) -> dict[str, Any]:
-        """Scan statistics."""
         return {
             "assets_discovered": self._assets_discovered,
             "scan_time_seconds": round(self._scan_time, 3),
